@@ -26,11 +26,13 @@ void yyerror (char *s) {
 	char * string;
 	double intdouble;
 	long intlong;
+	int intnormal;
 }
 
   
-%token <intdouble> SALARIO
+%token <intdouble> SALARIO1
 %token <intlong> IDEMPLEADO
+%token <intnormal> SALARIO2
 %token <string> NOMBREEMPLEADO EMPLEO ANHO 
 %type <intdouble> leesal
 %type <intlong> leeidempleado
@@ -38,22 +40,23 @@ void yyerror (char *s) {
 %start S
 
 %%
-S: leeidempleado {printf("Hemos llegado al final\n");}
+S: leeidempleado {printf("Hemos llegado al final: \n");}
 	;
 
-leeidempleado:	IDEMPLEADO leenombre {printf("ID: %lu ", $1);} 
+leeidempleado:	IDEMPLEADO leenombre {printf("ID: %lu \n", $1);} 
 	;
 
-leenombre: NOMBREEMPLEADO leeempleo {printf("NOMBRE: %s ", $1);}
+leenombre: NOMBREEMPLEADO leeempleo {printf("NOMBRE: %s \n", $1);}
 	;
 
-leeempleo: EMPLEO leeanho {printf("EMPLEO %s ", $1);}
+leeempleo: EMPLEO leeanho {printf("EMPLEO %s \n", $1);}
 	;
 
-leeanho: ANHO leesal {printf("ANHO: %s ", $1);}
+leeanho: ANHO leesal {printf("ANHO: %s \n", $1);}
         ;
 
-leesal: SALARIO {printf("SALARIO: %f", $1);}
+leesal: SALARIO1 {printf("SALARIO: %f \n", $1);}
+        | SALARIO2 {printf("SALARIO: %i \n", $1);}
         ;
 
 %%
