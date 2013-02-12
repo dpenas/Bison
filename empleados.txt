@@ -1,0 +1,12 @@
+1,Alberto,Director técnico,2000,1500.56
+2,Antonio,Analista de sistemas,2000,1400
+3,Belén,Comercial,2003,1400
+4,Carlos,Comercial,2000,1432.8
+5,Elena,Analista de redes,2001,1500.56
+6,Felipe,Programador,2001,1000.23
+7,Gloria,Analista,2000,1745.1
+8,Javier,Operador de sistemas y redes,2002,900.86
+9,Luis,Operador de sistemas y redes,2001,900.86
+10,María,Programadora,2004,1000.23
+11,Antonio,Programador,2000,1000.23
+12,Javier,Programador,2004,1000.23

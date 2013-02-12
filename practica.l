@@ -15,10 +15,11 @@ anho [0-9]{4}
 %s anhoemp
 %s salarioemp
 %%
-<nombreemp>{nombre} {yylval.string = yytext; BEGIN(empleoemp); return NOMBREEMPLEADO;}
-<empleoemp>{empleo} {yylval.string = yytext; BEGIN(anhoemp); return EMPLEO;}
-<anhoemp>{anho} {yylval.string = yytext; BEGIN(salarioemp); return ANHO;}
-<salarioemp>{salario1} {yylval.intdouble = atof(yytext); return SALARIO1;}
-<salarioemp>{salario2} {yylval.intnormal = atoi(yytext); return SALARIO2;}
-{idEmpleado} {yylval.intlong = atol(yytext); BEGIN(nombreemp); return IDEMPLEADO;}
+<nombreemp>{nombre}  {printf("Leo esto: %s \n", yytext); yylval.string = yytext; BEGIN(empleoemp); return NOMBREEMPLEADO;}
+<empleoemp>{empleo} {printf("Leo esto: %s \n", yytext); yylval.string = yytext; BEGIN(anhoemp); return EMPLEO;}
+<anhoemp>{anho} {printf("Leo esto: %s \n", yytext);yylval.string = yytext; BEGIN(salarioemp); return ANHO;}
+<salarioemp>{salario1} {printf("Leo esto: %s \n", yytext); yylval.intdouble = atof(yytext); return SALARIO1;}
+<salarioemp>{salario2} {printf("Leo esto: %s \n", yytext); yylval.intnormal = atoi(yytext); return SALARIO2;}
+
+{idEmpleado} {printf("Leo esto: %s \n", yytext); yylval.intlong = atol(yytext); BEGIN(nombreemp); return IDEMPLEADO;}
 %%
