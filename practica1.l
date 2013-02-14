@@ -7,29 +7,22 @@
 select "SELECT "
 from "FROM "
 where "WHERE "
-campo1 [^\n\t"FROM""SELECT""WHERE"]+
-coma [","]
+campofrom [^\n\t"WHERE"]+
+camposelect [^\n\t"FROM"]+
+campowhere [^\n\t]+
 
 %s camposelect
-%s campofrom
-%s from
 %s campowhere
-%s where
+%s campofrom
 
 %%
 
-<campowhere>{campo1} {printf("He leido: %s\n", yytext); return(OPERANDOS);}
 
-<where>{where} {printf("He leido WHERE: %s\n", yytext);}
+<camposelect>{camposelect} {printf("He leido2: %s\n", yytext); yylval.campo1 = yytext; return(FIELD);}
+<campofrom>{campofrom} {printf("He leidocampofrom: %s\n", yytext); yylval.campo1 = yytext; return(TABLE);}
+<campowhere>{campowhere} {printf("He leidocampowhere: %s\n", yytext); yylval.campo1 = yytext; return(OPERANDOS);}
 
-<campofrom>{campo1} {printf("He leido: %s\n", yytext); yylval.campo1 = yytext; BEGIN(where); return(TABLA);}
-
-<from>{from} {printf("He leido FROM: %s\n", yytext); BEGIN(campofrom);}
-
-<camposelect>{campo1}{coma} {printf("He leido: %s\n", yytext); yylval.campo1 = yytext; return(CAMPO1); BEGIN(camposelect);}
-
-<camposelect>{campo1} {printf("He leido22: %s\n", yytext); yylval.campo1 = yytext; BEGIN(from); return(CAMPO1); }
-
-{select} {BEGIN(camposelect);}
-
+{select} {printf("Ya pillé el Select\n"); yylval.campo1 = yytext; BEGIN(camposelect); return(SELECT);}
+{from} {printf("He leido FROM: \n"); yylval.campo1 = yytext; BEGIN(campofrom); return(FROM);}
+{where} {printf("He leido WHERE: %s\n", yytext); yylval.campo1 = yytext; BEGIN(campowhere); return(WHERE);}
 %%

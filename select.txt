@@ -1,2 +1,1 @@
-SELECT penenana, ratata, lerere, larara FROM turururu WHERE a>5
-SELECT * FROM rurururu
+SELECT idEmpleado, salario, anho FROM caca WHERE a;

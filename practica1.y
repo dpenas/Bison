@@ -47,19 +47,30 @@ void yyerror (char *s) {
 	char * campo1;
 }
 
+%token <campo1> FIELD
+%token <campo1> WHERE
+%token <campo1> TABLE 
+%token <campo1> FROM
+%token <campo1> SELECT
 %token <campo1> OPERANDOS
-%token <campo1> TABLA
-%token <campo1> CAMPO1
-%type <campo1> leecampo leetabla
+%type <campo1> parte_select parte_from parte_where fields
 %start S
 
 %%
-S: leecampo leetabla {printf("He llegado hasta el final\n");}
+S: parte_select parte_from parte_where;
 
-leecampo: CAMPO1 {printf("El campo que lei fue: %s \n", $1);}
-	| CAMPO1 leecampo {printf("El campo que lei fue 2: %s\n", $1);}
-	;
-leetabla: TABLA {printf("La tabla se llama: %s\n", $1);}
+parte_select : SELECT fields {printf("El select es: %s\n",$1);};
+
+fields: FIELD | fields ',' FIELD {printf("El field es!\n\n\n");};
+
+parte_from: FROM table {printf("El from que lei fue: %s\n", $1);};
+
+table: TABLE {printf("La tabla que lei fue: %s\n", $1);};
+
+parte_where: WHERE operandos;
+
+operandos: OPERANDOS {printf("Los operandos son: %s\n", $1);}
+		
 %%
 void main(){
 	printf("OLA KKKK ASE\n");
