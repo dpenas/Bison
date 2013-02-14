@@ -8,7 +8,7 @@ select "SELECT "
 from "FROM "
 where "WHERE "
 campofrom [^\n\t"WHERE"]+
-camposelect [^\n\t"FROM"]+
+camposelect [^\n\t"FROM" ,]+
 campowhere [^\n\t]+
 
 %s camposelect
@@ -18,7 +18,8 @@ campowhere [^\n\t]+
 %%
 
 
-<camposelect>{camposelect} {printf("He leido2: %s\n", yytext); yylval.campo1 = yytext; return(FIELD);}
+<camposelect>{camposelect}"," {printf("He leido2: %s\n", yytext); yylval.campo1 = yytext; BEGIN(camposelect); return(FIELDCOMA);}
+<camposelect>{camposelect} {printf("He leido2222: %s\n", yytext); yylval.campo1 = yytext; BEGIN(camposelect); return(FIELD);}
 <campofrom>{campofrom} {printf("He leidocampofrom: %s\n", yytext); yylval.campo1 = yytext; return(TABLE);}
 <campowhere>{campowhere} {printf("He leidocampowhere: %s\n", yytext); yylval.campo1 = yytext; return(OPERANDOS);}
 

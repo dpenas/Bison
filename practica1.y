@@ -53,15 +53,18 @@ void yyerror (char *s) {
 %token <campo1> FROM
 %token <campo1> SELECT
 %token <campo1> OPERANDOS
-%type <campo1> parte_select parte_from parte_where fields
+%token <campo1> FIELDCOMA
+%type <campo1> parte_select parte_from parte_where
 %start S
 
 %%
 S: parte_select parte_from parte_where;
 
-parte_select : SELECT fields {printf("El select es: %s\n",$1);};
+parte_select: SELECT fields {printf("El select es: %s\n",$1);};
 
-fields: FIELD | fields ',' FIELD {printf("El field es!\n\n\n");};
+fields: FIELDCOMA fields {printf("Acabo de leer esto LALALA: %s\n\n\n\n", $1);}
+      | FIELD {printf("El field es!\n");}
+      ;
 
 parte_from: FROM table {printf("El from que lei fue: %s\n", $1);};
 
