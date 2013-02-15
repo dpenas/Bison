@@ -7,9 +7,11 @@
 select "SELECT "
 from "FROM "
 where "WHERE "
+and "AND "
+or "OR "
 campofrom [^\n\t"WHERE"]+
 camposelect [^\n\t"FROM" ,]+
-campowhere [^\n\t]+
+campowhere [^\n\t"AND""OR"]+
 
 %s camposelect
 %s campowhere
@@ -17,13 +19,15 @@ campowhere [^\n\t]+
 
 %%
 
+<camposelect>{camposelect} {yylval.campo1 = yytext; BEGIN(camposelect); return(FIELD);}
+<camposelect>"," {yylval.campo1 = yytext; BEGIN(camposelect);}
+<campofrom>{campofrom} {yylval.campo1 = yytext; return(TABLE);}
+<campowhere>{campowhere}";" {yylval.campo1 = yytext; return(OPERANDOS);}
+<campowhere>{and} {yylval.campo1 = yytext; BEGIN(campowhere); return(AND);}
+<campowhere>{or} {yylval.campo1 = yytext; BEGIN(campowhere); return(OR);}
+<campowhere>{campowhere} {yylval.campo1 = yytext; BEGIN(campowhere); return(OPERANDOS);}
 
-<camposelect>{camposelect}"," {printf("He leido2: %s\n", yytext); yylval.campo1 = yytext; BEGIN(camposelect); return(FIELDCOMA);}
-<camposelect>{camposelect} {printf("He leido2222: %s\n", yytext); yylval.campo1 = yytext; BEGIN(camposelect); return(FIELD);}
-<campofrom>{campofrom} {printf("He leidocampofrom: %s\n", yytext); yylval.campo1 = yytext; return(TABLE);}
-<campowhere>{campowhere} {printf("He leidocampowhere: %s\n", yytext); yylval.campo1 = yytext; return(OPERANDOS);}
-
-{select} {printf("Ya pillé el Select\n"); yylval.campo1 = yytext; BEGIN(camposelect); return(SELECT);}
-{from} {printf("He leido FROM: \n"); yylval.campo1 = yytext; BEGIN(campofrom); return(FROM);}
-{where} {printf("He leido WHERE: %s\n", yytext); yylval.campo1 = yytext; BEGIN(campowhere); return(WHERE);}
+{select} {yylval.campo1 = yytext; BEGIN(camposelect); return(SELECT);}
+{from} {yylval.campo1 = yytext; BEGIN(campofrom); return(FROM);}
+{where} {yylval.campo1 = yytext; BEGIN(campowhere); return(WHERE);}
 %%

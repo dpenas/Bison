@@ -28,7 +28,6 @@ void insertNombrePuesto(char nombreopuesto[100], int caso){
 }
 
 void insertAnho(char anho[4]){
-	printf("Voy a imprimir este anho: %s\n", anho);
 	strcpy(empleados[line].anho, anho);
 }
 
@@ -47,36 +46,33 @@ void yyerror (char *s) {
 	char * campo1;
 }
 
-%token <campo1> FIELD
-%token <campo1> WHERE
-%token <campo1> TABLE 
-%token <campo1> FROM
-%token <campo1> SELECT
-%token <campo1> OPERANDOS
-%token <campo1> FIELDCOMA
+
+%token <campo1> AND OR WHERE FIELD TABLE FROM SELECT OPERANDOS
 %type <campo1> parte_select parte_from parte_where
 %start S
 
 %%
 S: parte_select parte_from parte_where;
 
-parte_select: SELECT fields {printf("El select es: %s\n",$1);};
+parte_select: SELECT fields {};
 
-fields: FIELDCOMA fields {printf("Acabo de leer esto LALALA: %s\n\n\n\n", $1);}
-      | FIELD {printf("El field es!\n");}
+fields: fields FIELD {printf("FIELD: %s\n", $2);}
+      | FIELD {printf("El primer FIELD es: %s\n", $1);}
       ;
 
-parte_from: FROM table {printf("El from que lei fue: %s\n", $1);};
+parte_from: FROM table {};
 
-table: TABLE {printf("La tabla que lei fue: %s\n", $1);};
+table: TABLE {printf("TABLA: %s\n", $1);};
 
 parte_where: WHERE operandos;
 
-operandos: OPERANDOS {printf("Los operandos son: %s\n", $1);}
+operandos: operandos AND OPERANDOS {printf("AND: %s\n",$3);}
+	 | operandos OR OPERANDOS {printf("OR: %s\n", $3);}
+	 | OPERANDOS {printf("PRIMER OPERANDO: %s \n", $1);}
+	 ;
 		
 %%
 void main(){
-	printf("OLA KKKK ASE\n");
 	insertID(1);
 	insertSalario(1420);
 	insertAnho("1422");
