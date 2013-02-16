@@ -47,7 +47,7 @@ void yyerror (char *s) {
 }
 
 
-%token <campo1> AND OR WHERE FIELD TABLE FROM SELECT OPERANDOS
+%token <campo1> AND OR WHERE FIELD TABLE FROM SELECT OPERANDOS MAYOR MENOR IGUAL
 %type <campo1> parte_select parte_from parte_where
 %start S
 
@@ -66,9 +66,15 @@ table: TABLE {printf("TABLA: %s\n", $1);};
 
 parte_where: WHERE operandos;
 
-operandos: operandos AND OPERANDOS {printf("AND: %s\n",$3);}
-	 | operandos OR OPERANDOS {printf("OR: %s\n", $3);}
-	 | OPERANDOS {printf("PRIMER OPERANDO: %s \n", $1);}
+operandos: operandos AND OPERANDOS MAYOR OPERANDOS {printf("AND MAYOR: %s\n",$3);}
+	 | operandos AND OPERANDOS MENOR OPERANDOS {printf("AND MENOR: %s\n",$3);}
+	 | operandos AND OPERANDOS IGUAL OPERANDOS {printf("AND IGUAL: %s\n",$3);}
+	 | operandos OR OPERANDOS IGUAL OPERANDOS {printf("OR IGUAL: %s\n", $3);}
+	 | operandos OR OPERANDOS MENOR OPERANDOS {printf("OR MENOR: %s\n", $3);}
+	 | operandos OR OPERANDOS MAYOR OPERANDOS {printf("OR MAYOR: %s\n", $3);}
+	 | OPERANDOS MAYOR OPERANDOS {printf("PRIMER OPERANDO MAYOR: %s \n", $1);}
+	 | OPERANDOS MENOR OPERANDOS {printf("PRIMER OPERANDO MENOR: %s \n", $1);}
+	 | OPERANDOS IGUAL OPERANDOS {printf("PRIMER OPERANDO IGUAL: %s \n", $1);}
 	 ;
 		
 %%

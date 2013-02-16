@@ -1,1 +1,1 @@
-SELECT idEmpleado, salario, anho FROM caca WHERE a;
+SELECT idEmpleado, salario, anho FROM caca WHERE idEmpleado > 5 AND salario < 1000 OR anho > 3;

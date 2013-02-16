@@ -11,7 +11,10 @@ and "AND "
 or "OR "
 campofrom [^\n\t"WHERE"]+
 camposelect [^\n\t"FROM" ,]+
-campowhere [^\n\t"AND""OR"]+
+campowhere [^\n\t"AND""OR"">""<""="]+
+mayor "> "
+menor "< "
+igual "= "
 
 %s camposelect
 %s campowhere
@@ -25,6 +28,9 @@ campowhere [^\n\t"AND""OR"]+
 <campowhere>{campowhere}";" {yylval.campo1 = yytext; return(OPERANDOS);}
 <campowhere>{and} {yylval.campo1 = yytext; BEGIN(campowhere); return(AND);}
 <campowhere>{or} {yylval.campo1 = yytext; BEGIN(campowhere); return(OR);}
+<campowhere>{mayor} {yylval.campo1 = yytext; BEGIN(campowhere); return(MAYOR);}
+<campowhere>{menor} {yylval.campo1 = yytext; BEGIN(campowhere); return(MENOR);}
+<campowhere>{igual} {yylval.campo1 = yytext; BEGIN(campowhere); return(IGUAL);}
 <campowhere>{campowhere} {yylval.campo1 = yytext; BEGIN(campowhere); return(OPERANDOS);}
 
 {select} {yylval.campo1 = yytext; BEGIN(camposelect); return(SELECT);}
