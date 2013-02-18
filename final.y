@@ -221,14 +221,15 @@ void obtaininformationstring(char * valor, int tipo, int andor){
 	if (andor == 0){
 		for(i=0; i < numemp; i++){
 			if (tipo == 1){	
-				if (!strncmp(empleados[i].puesto, valor, strlen(valor))){
+				if (!strncmp(empleados[i].puesto, valor, strlen(empleados[i].nombre))){
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
 				}
 			}
 			if (tipo == 2){	
-					printf("LO INSERTO\n");
-				if (!strncmp(empleados[i].nombre, valor, strlen(valor))){
+					printf("Nombre: %s", empleados[i].nombre);
+					printf("-- valor: %s\n", valor);
+				if (!strncmp(empleados[i].nombre, valor, strlen(empleados[i].nombre))){
 					printf("YEEEEEAH\n");
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
