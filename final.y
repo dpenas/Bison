@@ -14,7 +14,7 @@ typedef struct table{
 	long idEmpleado;
 	char nombre[100];
 	char puesto[100];
-	char anho[4];
+	int anho;
 	double salario;
 } tablaEmpleados;
 
@@ -24,7 +24,7 @@ typedef struct tableaux{
 	long idEmpleado;
 	char nombre[100];
 	char puesto[100];
-	char anho[4];
+	int anho;
 	double salario;
 	int control;
 } tablaFinales;
@@ -43,7 +43,7 @@ void insertAuxEmpleado (int posEmpleado, int andor){
 	auxfinales[numauxfinal].salario = empleados[posEmpleado].salario;
 	strcpy(auxfinales[numauxfinal].nombre, empleados[posEmpleado].nombre);
 	strcpy(auxfinales[numauxfinal].puesto, empleados[posEmpleado].puesto);
-	strcpy(auxfinales[numauxfinal].anho, empleados[posEmpleado].anho);
+	auxfinales[numauxfinal].anho = empleados[posEmpleado].anho;
 	if(!andor && !controlOR){controlaux++;}
 	auxfinales[numauxfinal].control = controlaux;
 	numauxfinal++;
@@ -56,19 +56,68 @@ void imprimeresultados(){
 			printf("Nombre: %s\n", auxfinales[iter].nombre);
 			printf("Empleo: %s\n", auxfinales[iter].puesto);
 			printf("Salario: %f\n", auxfinales[iter].salario);
-			printf("Anho: %s\n", auxfinales[iter].anho);
+			printf("Anho: %i\n", auxfinales[iter].anho);
 		}
 	}
 }
 
 void imprimeempleados(){
+	int iter;
 	for (iter = 0; iter <= line; iter++){
-			printf("IdEmpleado: %lu\n", empleados[iter].idEmpleado);
-			printf("Nombre: %s\n", empleados[iter].nombre);
-			printf("Empleo: %s\n", empleados[iter].puesto);
-			printf("Salario: %f\n", empleados[iter].salario);
-			printf("Anho: %s\n", empleados[iter].anho);
+		printf("IdEmpleado: %lu\n", empleados[iter].idEmpleado);
+		printf("Nombre: %s\n", empleados[iter].nombre);
+		printf("Empleo: %s\n", empleados[iter].puesto);
+		printf("Salario: %f\n", empleados[iter].salario);
+		printf("Anho: %i\n", empleados[iter].anho);
 	}
+}
+
+void obtaininformationanho(char * field, char * valor, char * simbolo, int andor){
+	int valorreal;
+	valorreal = atoi(valor);
+	int i;
+	if (!andor){
+		for(i=0; i < numemp; i++){	
+			if(!strcmp(simbolo, ">")){
+				if (empleados[i].anho > valorreal){
+					insertAuxEmpleado(i,andor);
+					controlOR = 1;
+				}
+			}else{
+				if(!strcmp(simbolo, "<")){
+					if (empleados[i].anho < valorreal){
+						insertAuxEmpleado(i,andor);
+						controlOR = 1;
+					}
+				}else{
+					if (empleados[i].anho == valorreal){
+						insertAuxEmpleado(i,andor);
+						controlOR = 1;
+					}
+				}
+			}
+		}
+	}
+	else{
+		for (i = 0; i < numauxfinal; i++){
+			if(!strcmp(simbolo,">") && controlaux == auxfinales[i].control){
+				if (!(auxfinales[i].anho > valorreal)){
+					auxfinales[i].idEmpleado = -1;
+				}
+			}
+			if(!strcmp(simbolo,"<") && controlaux == auxfinales[i].control){
+				if (!(auxfinales[i].anho < valorreal)){
+					auxfinales[i].idEmpleado = -1;
+				}
+			}
+			if(!strcmp(simbolo,"=") && controlaux == auxfinales[i].control){
+				if (!(auxfinales[i].anho == valorreal)){
+					auxfinales[i].idEmpleado = -1;
+				}
+			}
+		}	
+	}
+	controlOR = 0;
 }
 
 void obtaininformationsal(char * field, char * valor, char * simbolo, int andor){
@@ -79,20 +128,17 @@ void obtaininformationsal(char * field, char * valor, char * simbolo, int andor)
 		for(i=0; i < numemp; i++){	
 			if(!strcmp(simbolo, ">")){
 				if (empleados[i].salario > valorreal){
-					printf("EL SALARIO ES MAYOR\n\n\n");
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
 				}
 			}else{
 				if(!strcmp(simbolo, "<")){
 					if (empleados[i].salario < valorreal){
-						printf("EL SALARIO ES MENOR\n\n\n");
 						insertAuxEmpleado(i,andor);
 						controlOR = 1;
 					}
 				}else{
 					if (empleados[i].salario == valorreal){
-						printf("EL VALOR ES IGUAL\n\n\n");
 						insertAuxEmpleado(i,andor);
 						controlOR = 1;
 					}
@@ -130,20 +176,17 @@ void obtaininformationid(char * field, char * valor, char * simbolo, int andor){
 		for(i=0; i < numemp; i++){	
 			if(!strcmp(simbolo, ">")){
 				if (empleados[i].idEmpleado > valorreal){
-					printf("EL ID ES MAYOR\n\n\n");
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
 				}
 			}else{
 				if(!strcmp(simbolo, "<")){
 					if (empleados[i].idEmpleado < valorreal){
-						printf("EL ID ES MENOR\n\n\n");
 						insertAuxEmpleado(i,andor);
 						controlOR = 1;
 					}
 				}else{
 					if (empleados[i].idEmpleado == valorreal){
-						printf("EL ID ES IGUAL\n\n\n");
 						insertAuxEmpleado(i,andor);
 						controlOR = 1;
 					}
@@ -153,19 +196,19 @@ void obtaininformationid(char * field, char * valor, char * simbolo, int andor){
 	}		
 	else{
 		for (i = 0; i < numauxfinal; i++){
-			if(!strcmp(simbolo,">") && controlaux == auxfinales[iter].control){
-				if (!(auxfinales[iter].idEmpleado > valorreal)){
-					auxfinales[iter].idEmpleado = -1;
+			if(!strcmp(simbolo,">") && controlaux == auxfinales[i].control){
+				if (!(auxfinales[i].idEmpleado > valorreal)){
+					auxfinales[i].idEmpleado = -1;
 				}
 			}
-			if(!strcmp(simbolo,"<") && controlaux == auxfinales[iter].control){
-				if (!(auxfinales[iter].idEmpleado < valorreal)){
-					auxfinales[iter].idEmpleado = -1;
+			if(!strcmp(simbolo,"<") && controlaux == auxfinales[i].control){
+				if (!(auxfinales[i].idEmpleado < valorreal)){
+					auxfinales[i].idEmpleado = -1;
 				}
 			}
-			if(!strcmp(simbolo,"=") && controlaux == auxfinales[iter].control){
-				if (!(auxfinales[iter].idEmpleado == valorreal)){
-					auxfinales[iter].idEmpleado = -1;
+			if(!strcmp(simbolo,"=") && controlaux == auxfinales[i].control){
+				if (!(auxfinales[i].idEmpleado == valorreal)){
+					auxfinales[i].idEmpleado = -1;
 				}
 			}
 		}	
@@ -175,26 +218,18 @@ void obtaininformationid(char * field, char * valor, char * simbolo, int andor){
 
 void obtaininformationstring(char * valor, int tipo, int andor){
 	int i;
-	printf("Numauxfinal: %i\n", numauxfinal);
 	if (andor == 0){
 		for(i=0; i < numemp; i++){
-			if (!tipo){
-				if (!strncmp(empleados[i].anho, valor, strlen(valor))){
-					insertAuxEmpleado(i,andor);
-					printf("LOS ANHOS SON IGUALES\n");
-					controlOR = 1;
-				}
-			}
 			if (tipo == 1){	
 				if (!strncmp(empleados[i].puesto, valor, strlen(valor))){
-					printf("LOS EMPLEOS SON IGUALES\n");
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
 				}
 			}
 			if (tipo == 2){	
+					printf("LO INSERTO\n");
 				if (!strncmp(empleados[i].nombre, valor, strlen(valor))){
-					printf("LOS NOMBRES SON IGUALES\n");	
+					printf("YEEEEEAH\n");
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
 				}
@@ -203,21 +238,16 @@ void obtaininformationstring(char * valor, int tipo, int andor){
 	}
 	else{
 		for (i = 0; i < numauxfinal; i++){
-			printf("NUMAUXFINAL ES: %i\n\n", numauxfinal);
-			if(tipo == 0){
-				printf("ENTROOOOOOOOOOO\n\n\n");
-				if((strncmp(auxfinales[iter].anho,valor,strlen(valor))!=0) && controlaux == auxfinales[iter].control){
-					auxfinales[iter].idEmpleado = -1;
-				}
-			}
 			if(tipo == 1){
-				if((strncmp(auxfinales[iter].puesto,valor,strlen(valor))!=0) && controlaux == auxfinales[iter].control){
-					auxfinales[iter].idEmpleado = -1;
+				if((strncmp(auxfinales[i].puesto,valor,strlen(valor))!=0) && controlaux == auxfinales[i].control){
+					auxfinales[i].idEmpleado = -1;
 				}
 			}
 			if(tipo == 2){
-				if((strncmp(auxfinales[iter].nombre,valor,strlen(valor))!= 0) && controlaux == auxfinales[iter].control){
-					auxfinales[iter].idEmpleado = -1;
+				printf("TAMBIEN ENTRO AQUÍ\n");
+				if((strncmp(auxfinales[i].nombre,valor,strlen(valor))!= 0) && controlaux == auxfinales[i].control){
+					printf("LO MATO!!!\n");
+					auxfinales[i].idEmpleado = -1;
 				}
 			}
 		}
@@ -229,7 +259,6 @@ void obtaininformationstring(char * valor, int tipo, int andor){
 
 int stringexists(char * field, char* valor, char* simbolo, int andor){
 //Esta función es una blasfemia en todos los sentidos. No mirar.
-	printf("Me han enviado esto: %s\n", field);
 	if(!strncmp(field, "salario", strlen("salario"))){
 		obtaininformationsal(field, valor, simbolo, andor);
 		return 0;
@@ -239,7 +268,7 @@ int stringexists(char * field, char* valor, char* simbolo, int andor){
 			return 1;
 		} else{
 			if (!strncmp(field, "anho", strlen("anho"))){
-				obtaininformationstring(valor, 0, andor);
+				obtaininformationanho(field, valor, simbolo, andor);
 				return 2;
 			}else{
 				if (!strncmp(field, "empleo", strlen("empleo"))){
@@ -247,6 +276,7 @@ int stringexists(char * field, char* valor, char* simbolo, int andor){
 					return 3;
 				}else{
 					if (!strncmp(field, "nombre", strlen("nombre"))){
+					printf("Vale, es un nombre\n");
 					obtaininformationstring(valor, 2, andor);
 						return 4;
 					}
@@ -271,15 +301,12 @@ void insertNombrePuesto(char nombreopuesto[100], int caso){
 	}
 }
 
-void insertAnho(char anho[4]){
-	printf("Voy a imprimir este anho: %s\n", anho);
-	strcpy(empleados[line].anho, anho);
+void insertAnho(int anho){
+	empleados[line].anho = anho;
 }
 
 void insertSalario(double salario){
-	printf("EL LINE2 ES: %i\n", line2);
-	empleados[line2].salario = salario;
-	line2++;
+	empleados[line].salario = salario;
 }
 
 void yyerror (char *s) {
@@ -302,8 +329,8 @@ void yyerror (char *s) {
 %type <campo1> parte_select parte_from parte_where
 %token <intdouble> SALARIO1
 %token <intlong> IDEMPLEADO
-%token <intnormal> SALARIO2
-%token <string> NOMBREEMPLEADO EMPLEO ANHO 
+%token <intnormal> SALARIO2 ANHO
+%token <string> NOMBREEMPLEADO EMPLEO
 %type <intdouble> leesal
 %type <intlong> leeidempleado
 %type <string> leeanho 
@@ -312,52 +339,62 @@ void yyerror (char *s) {
 %start S
 
 %%
-S: parte_select parte_from parte_where | leeidempleado leenombre leeempleo leeanho leesal;
+S: parte_select parte_from parte_where | leeidempleado leenombre leeempleo leeanho leesal | leeidempleado leenombre leeempleo leeanho leesal S;
 
 parte_select: SELECT fields {};
 
-fields: fields FIELD {printf("FIELD: %s\n", $2);}
-      | FIELD {printf("El primer FIELD es: %s\n", $1);}
+fields: fields FIELD {}
+      | FIELD {}
       ;
 
 parte_from: FROM table {};
 
-table: TABLE {printf("TABLA: %s\n", $1);};
+table: TABLE {};
 
 parte_where: WHERE operandos;
 
-operandos: operandos AND OPERANDOS MAYOR OPERANDOS {printf("AND MAYOR: %s\n",$3); stringexists($3, $5, ">", 1);}
-	 | operandos AND OPERANDOS MENOR OPERANDOS {printf("AND MENOR: %s\n",$3); stringexists($3, $5, "<", 1);}
-	 | operandos AND OPERANDOS IGUAL OPERANDOS {printf("AND IGUAL: %s\n",$3); stringexists($3, $5, "=", 1);}
-	 | operandos OR OPERANDOS IGUAL OPERANDOS {printf("OR IGUAL: %s\n", $3); stringexists($3, $5, "=", 0);}
-	 | operandos OR OPERANDOS MENOR OPERANDOS {printf("OR MENOR: %s\n", $3); stringexists($3, $5, "<", 0);}
-	 | operandos OR OPERANDOS MAYOR OPERANDOS {printf("OR MAYOR: %s\n", $3); stringexists($3, $5, ">", 0);}
-	 | OPERANDOS MAYOR OPERANDOS {printf("PRIMER OPERANDO MAYOR: %s \n", $1); stringexists($1, $3, ">", 0);}
-	 | OPERANDOS MENOR OPERANDOS {printf("PRIMER OPERANDO MENOR: %s \n", $1); stringexists($1, $3, "<", 0);}
-	 | OPERANDOS IGUAL OPERANDOS {printf("PRIMER OPERANDO IGUAL: %s \n", $1); stringexists($1, $3, "=", 0);}
+operandos: operandos AND OPERANDOS MAYOR OPERANDOS {stringexists($3, $5, ">", 1);}
+	 | operandos AND OPERANDOS MENOR OPERANDOS {stringexists($3, $5, "<", 1);}
+	 | operandos AND OPERANDOS IGUAL OPERANDOS {stringexists($3, $5, "=", 1);}
+	 | operandos OR OPERANDOS IGUAL OPERANDOS {stringexists($3, $5, "=", 0);}
+	 | operandos OR OPERANDOS MENOR OPERANDOS {stringexists($3, $5, "<", 0);}
+	 | operandos OR OPERANDOS MAYOR OPERANDOS {stringexists($3, $5, ">", 0);}
+	 | OPERANDOS MAYOR OPERANDOS {stringexists($1, $3, ">", 0);}
+	 | OPERANDOS MENOR OPERANDOS {stringexists($1, $3, "<", 0);}
+	 | OPERANDOS IGUAL OPERANDOS {stringexists($1, $3, "=", 0);}
 	 ;
 
-leeidempleado: IDEMPLEADO {printf("ID: %lu \n", $1); insertID($1);} 
+leeidempleado: IDEMPLEADO {insertID($1);} 
 	;
 
-leenombre: NOMBREEMPLEADO {printf("NOMBRE: %s \n", $1); insertNombrePuesto($1,1);}
+leenombre: NOMBREEMPLEADO {insertNombrePuesto($1,1);}
 	;
 
-leeempleo: EMPLEO {printf("EMPLEO %s \n", $1); insertNombrePuesto($1,0);}
+leeempleo: EMPLEO {insertNombrePuesto($1,0);}
 	;
 
-leeanho: ANHO {printf("HOLA\n"); printf("ANHO: %s \n", $1); insertAnho($1);}
+leeanho: ANHO {insertAnho($1);}
      ;
 
-leesal: SALARIO1 {printf("SALARIO1: %f \n", $1); insertSalario($1);}
-     | SALARIO2 {printf("SALARIO2: %i \n", $1); insertSalario($1);}
-	| SALARIO1 S {printf("SALARIO3 %f\n", $1); insertSalario($1);}
-	| SALARIO2 S {printf("SALARIO4 %i\n", $1); insertSalario($1);}
-	 
+leesal: SALARIO1 {insertSalario($1);}
+     | SALARIO2 {insertSalario($1);}
 		
 %%
-void main(){
+void main(int argc, char * argv[]){
+	FILE * archivo;
+	FILE * archivo2;
+	if (argc < 3){
+		printf("Tienes que introducir dos ficheros (empleado y select)\n");
+		exit(0);
+	}
+	printf("Cargando...\n");
+	archivo = fopen(argv[1],"r");
+	lecturaFichero(archivo);
 	yyparse();
-	printf("LOS RESULTADOS FINALES: \n\n\n");
-	imprimeempleados();
+	printf("Bases de datos cargada\n");
+	archivo2 = fopen(argv[2],"r");
+	lecturaFichero(archivo2);
+	yyparse();
+	printf("RESULTADOS:\n\n");
+	imprimeresultados();
 }

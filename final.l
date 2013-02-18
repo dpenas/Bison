@@ -30,11 +30,11 @@ igual "= "
 %s campowhere
 %s campofrom
 %%
-<nombreemp>{nombre}  {printf("Leo esto: %s \n", yytext); yylval.string = yytext; BEGIN(empleoemp); return NOMBREEMPLEADO;}
-<empleoemp>{empleo} {printf("Leo esto: %s \n", yytext); yylval.string = yytext; BEGIN(anhoemp); return EMPLEO;}
-<anhoemp>{anho} {printf("Leo esto: %s \n", yytext);yylval.string = yytext; BEGIN(salarioemp); return ANHO;}
-<salarioemp>{salario1} {printf("Leo esto: %s \n", yytext); yylval.intdouble = atof(yytext); return SALARIO1;}
-<salarioemp>{salario2} {printf("Leo esto: %s \n", yytext); yylval.intnormal = atoi(yytext); return SALARIO2;}
+<nombreemp>{nombre}  {yylval.string = yytext; BEGIN(empleoemp); return NOMBREEMPLEADO;}
+<empleoemp>{empleo} {yylval.string = yytext; BEGIN(anhoemp); return EMPLEO;}
+<anhoemp>{anho} {yylval.intnormal = atoi(yytext);  BEGIN(salarioemp); return ANHO;}
+<salarioemp>{salario1} {yylval.intdouble = atof(yytext); return SALARIO1;}
+<salarioemp>{salario2} {yylval.intnormal = atoi(yytext); return SALARIO2;}
 
 <camposelect>{camposelect} {yylval.campo1 = yytext; BEGIN(camposelect); return(FIELD);}
 <camposelect>"," {yylval.campo1 = yytext; BEGIN(camposelect);}
@@ -50,5 +50,10 @@ igual "= "
 {select} {yylval.campo1 = yytext; BEGIN(camposelect); return(SELECT);}
 {from} {yylval.campo1 = yytext; BEGIN(campofrom); return(FROM);}
 {where} {yylval.campo1 = yytext; BEGIN(campowhere); return(WHERE);}
-{idEmpleado} {printf("Leo esto: %s \n", yytext); yylval.intlong = atol(yytext); BEGIN(nombreemp); return IDEMPLEADO;}
+{idEmpleado} {yylval.intlong = atol(yytext); BEGIN(nombreemp); return IDEMPLEADO;}
 %%
+void lecturaFichero (FILE * fichero){
+	YY_BUFFER_STATE bf;
+	bf = yy_create_buffer(fichero, YY_BUF_SIZE);
+	yy_switch_to_buffer (bf);
+}
