@@ -95,6 +95,11 @@ void comprobacionfields(char * field){
 		if (!strncmp(field, "nombre", strlen("nombre"))) nombrey = 1;
 		if (!strncmp(field, "salario", strlen("salario"))) salarioy = 1;
 	}
+	if(idempleadoy == 0 && anhoy == 0 && empleoy == 0 && nombrey == 0 && salarioy == 0){
+		printf("Has introducido un valor inexistente en el SELECT. Tiene que ser idEmpleado, anho, puesto, salario o nombre\n");
+		exit(0);
+
+	}
 }
 
 void imprimeempleados(){
@@ -290,7 +295,7 @@ void obtaininformationstring(char * valor, int tipo, int andor){
 }
 
 int stringexists(char * field, char* valor, char* simbolo, int andor){
-//Esta función es una blasfemia en todos los sentidos. No mirar.
+//Esta función es una blasfemia en todos los sentidos.
 	if(!strncmp(field, "salario", strlen("salario"))){
 		obtaininformationsal(field, valor, simbolo, andor);
 		return 0;
@@ -315,7 +320,8 @@ int stringexists(char * field, char* valor, char* simbolo, int andor){
 			}
 		}
 	}
-return -1;
+printf("Campo del WHERE no reconocido. Tiene que ser idEmpleado, salario, anho, nombre o empleo\n");
+exit(0);
 }
 
 void insertID(long id){
@@ -405,7 +411,7 @@ leeempleo: EMPLEO {insertNombrePuesto($1,0);}
 	;
 
 leeanho: ANHO {insertAnho($1);}
-     ;
+	;
 
 leesal: SALARIO1 {insertSalario($1);}
      | SALARIO2 {insertSalario($1);}
