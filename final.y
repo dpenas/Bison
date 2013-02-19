@@ -50,7 +50,8 @@ void insertAuxEmpleado (int posEmpleado, int andor){
 	strcpy(auxfinales[numauxfinal].nombre, empleados[posEmpleado].nombre);
 	strcpy(auxfinales[numauxfinal].puesto, empleados[posEmpleado].puesto);
 	auxfinales[numauxfinal].anho = empleados[posEmpleado].anho;
-	if(!andor && !controlOR){controlaux++;}
+	if(!andor && !controlOR)
+		controlaux++;
 	auxfinales[numauxfinal].control = controlaux;
 	numauxfinal++;
 }
@@ -69,6 +70,13 @@ void imprimeresultados(){
 			if(anhoy)
 				printf("Anho: %i\n", auxfinales[iter].anho);
 		}
+	}
+}
+
+void comprobarTabla(char * tabla){
+	if (strncmp(tabla, "empleados", strlen("empleados")) != 0){
+		printf("La tabla insertada no existe (debería de ser empleados). Abortando\n");
+		exit(0);
 	}
 }
 
@@ -372,7 +380,7 @@ fields: fields FIELD {comprobacionfields($2);}
 
 parte_from: FROM table {};
 
-table: TABLE {};
+table: TABLE {comprobarTabla($1);}
 
 parte_where: WHERE operandos;
 

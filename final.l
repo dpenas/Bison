@@ -51,6 +51,7 @@ igual "= "
 {from} {yylval.campo1 = yytext; BEGIN(campofrom); return(FROM);}
 {where} {yylval.campo1 = yytext; BEGIN(campowhere); return(WHERE);}
 {idEmpleado} {yylval.intlong = atol(yytext); BEGIN(nombreemp); return IDEMPLEADO;}
+"," {}
 %%
 void lecturaFichero (FILE * fichero){
 	YY_BUFFER_STATE bf;
