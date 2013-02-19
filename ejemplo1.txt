@@ -1,0 +1,1 @@
+SELECT * FROM empleados WHERE nombre = Carlos AND anho = 2000 OR salario < 1000;
