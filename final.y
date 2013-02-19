@@ -38,6 +38,12 @@ int controlaux = 0;
 int numauxfinal = 0;
 int iter = 0;
 int controlOR = 0;
+int idempleadoy = 0;
+int anhoy = 0;
+int empleoy = 0;
+int salarioy = 0;
+int nombrey = 0;
+
 void insertAuxEmpleado (int posEmpleado, int andor){
 	auxfinales[numauxfinal].idEmpleado = empleados[posEmpleado].idEmpleado;
 	auxfinales[numauxfinal].salario = empleados[posEmpleado].salario;
@@ -52,12 +58,34 @@ void insertAuxEmpleado (int posEmpleado, int andor){
 void imprimeresultados(){
 	for (iter = 0; iter < numauxfinal; iter++){
 		if(auxfinales[iter].idEmpleado != -1){
-			printf("IdEmpleado: %lu\n", auxfinales[iter].idEmpleado);
-			printf("Nombre: %s\n", auxfinales[iter].nombre);
-			printf("Empleo: %s\n", auxfinales[iter].puesto);
-			printf("Salario: %f\n", auxfinales[iter].salario);
-			printf("Anho: %i\n", auxfinales[iter].anho);
+			if(idempleadoy)
+				printf("IdEmpleado: %lu\n", auxfinales[iter].idEmpleado);
+			if(nombrey)
+				printf("Nombre: %s\n", auxfinales[iter].nombre);
+			if(empleoy)
+				printf("Empleo: %s\n", auxfinales[iter].puesto);
+			if(salarioy)
+				printf("Salario: %f\n", auxfinales[iter].salario);
+			if(anhoy)
+				printf("Anho: %i\n", auxfinales[iter].anho);
 		}
+	}
+}
+
+void comprobacionfields(char * field){
+	if (!strncmp(field, "*", 1)){
+		idempleadoy = 1;
+		anhoy = 1;
+		empleoy = 1;
+		salarioy = 1;
+		nombrey = 1;
+	}
+	else{
+		if (!strncmp(field, "idEmpleado", strlen("idEmpleado"))) idempleadoy = 1;
+		if (!strncmp(field, "anho", strlen("anho"))) anhoy = 1;
+		if (!strncmp(field, "puesto", strlen("puesto")))  empleoy = 1;
+		if (!strncmp(field, "nombre", strlen("nombre"))) nombrey = 1;
+		if (!strncmp(field, "salario", strlen("salario"))) salarioy = 1;
 	}
 }
 
@@ -227,10 +255,7 @@ void obtaininformationstring(char * valor, int tipo, int andor){
 				}
 			}
 			if (tipo == 2){	
-					printf("Nombre: %s", empleados[i].nombre);
-					printf("-- valor: %s\n", valor);
 				if (!strncmp(empleados[i].nombre, valor, strlen(empleados[i].nombre))){
-					printf("YEEEEEAH\n");
 					insertAuxEmpleado(i,andor);
 					controlOR = 1;
 				}
@@ -245,9 +270,7 @@ void obtaininformationstring(char * valor, int tipo, int andor){
 				}
 			}
 			if(tipo == 2){
-				printf("TAMBIEN ENTRO AQUÍ\n");
 				if((strncmp(auxfinales[i].nombre,valor,strlen(valor))!= 0) && controlaux == auxfinales[i].control){
-					printf("LO MATO!!!\n");
 					auxfinales[i].idEmpleado = -1;
 				}
 			}
@@ -277,7 +300,6 @@ int stringexists(char * field, char* valor, char* simbolo, int andor){
 					return 3;
 				}else{
 					if (!strncmp(field, "nombre", strlen("nombre"))){
-					printf("Vale, es un nombre\n");
 					obtaininformationstring(valor, 2, andor);
 						return 4;
 					}
@@ -344,8 +366,8 @@ S: parte_select parte_from parte_where | leeidempleado leenombre leeempleo leean
 
 parte_select: SELECT fields {};
 
-fields: fields FIELD {}
-      | FIELD {}
+fields: fields FIELD {comprobacionfields($2);}
+      | FIELD {comprobacionfields($1);}
       ;
 
 parte_from: FROM table {};
